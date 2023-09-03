@@ -45,7 +45,7 @@ class Program
                 case ConsoleKey.D3:
                 case ConsoleKey.NumPad3:
 
-                    // ListStudents();
+                    ListStudents();
 
                     break;
 
@@ -60,51 +60,6 @@ class Program
             Clear();
         }
     }
-
-    // private static void ListStudents()
-    // {
-    //     Write("Klass: ");
-
-    //     string program = ReadLine();
-
-    //     var programStudents = students.Where(student => student.Program == program);
-
-    //     foreach (var student in programStudents)
-    //     {
-    //         WriteLine($"{student.FirstName} {student.LastName}");
-    //     }
-
-    //     while (ReadKey(true).Key != ConsoleKey.Escape) ;
-    // }
-
-    // private static void SearchStudent()
-    // {
-
-    //     Write("Personnummer: ");
-
-    //     string socialSecurityNumber = ReadLine();
-
-    //     Clear();
-
-    //     var student = students.Find(student => student.SocialSecurityNumber == socialSecurityNumber);
-
-    //     if (student != null)
-    //     {
-    //         WriteLine($"Förnamn: {student.FirstName}");
-    //         WriteLine($"Efternamn: {student.LastName}");
-    //         WriteLine($"Personnummer: {student.SocialSecurityNumber}");
-    //         WriteLine($"E-post: {student.Email}");
-    //         WriteLine($"Klass: {student.Program}");
-
-    //         while (ReadKey(true).Key != ConsoleKey.Escape) ;
-    //     }
-    //     else
-    //     {
-    //         WriteLine("Studerande saknas");
-
-    //         Thread.Sleep(2000);
-    //     }
-    // }
 
     private static void RegisterStudent()
     {
@@ -137,12 +92,6 @@ class Program
 
         var student = new Student
         (
-        // FirstName = firstName,
-        // LastName = lastName,
-        // SocialSecurityNumber = socialSecurityNumber,
-        // PhoneNumber = phoneNumber,
-        // Email = email,
-        // Program = program
 
         firstName,
         lastName,
@@ -173,14 +122,6 @@ class Program
         // if (students.Exists(x => x.SocialSecurityNumber == student.SocialSecurityNumber))
         //     throw new Exception("Student already registered");
 
-        // students.Add(student);
-
-        // firstName,
-        //     lastName,
-        //     socialSecurityNumber,
-        //     phoneNumber,
-        //     email,
-        //     program,
 
         string sql = @"
         INSERT INTO Student (
@@ -227,6 +168,107 @@ class Program
         {
             Console.WriteLine("Failed to insert student.");
         }
+    }
+
+    // private static void SearchStudent()
+    // {
+
+    //     Write("Personnummer: ");
+
+    //     string socialSecurityNumber = ReadLine();
+
+    //     Clear();
+
+    //     var students = FetchStudents();
+
+    //     var student = students.Find(student => student.SocialSecurityNumber == socialSecurityNumber);
+
+    //     if (student != null)
+    //     {
+    //         WriteLine($"Förnamn: {student.FirstName}");
+    //         WriteLine($"Efternamn: {student.LastName}");
+    //         WriteLine($"Personnummer: {student.SocialSecurityNumber}");
+    //         WriteLine($"E-post: {student.Email}");
+    //         WriteLine($"Klass: {student.Program}");
+
+    //         while (ReadKey(true).Key != ConsoleKey.Escape) ;
+    //     }
+    //     else
+    //     {
+    //         WriteLine("Studerande saknas");
+
+    //         Thread.Sleep(2000);
+    //     }
+    // }
+
+    private static void ListStudents()
+    {
+        Write("Klass: ");
+
+        string program = ReadLine();
+
+        var students = FetchStudents();
+
+        var programStudents = students.Where(student => student.Program == program);
+
+        foreach (var student in programStudents)
+        {
+            WriteLine($"{student.FirstName} {student.LastName}");
+        }
+
+        while (ReadKey(true).Key != ConsoleKey.Escape) ;
+    }
+
+    private static IEnumerable<Student> FetchStudents()
+    {
+        var sql = @"
+            SELECT FirstName, 
+                   LastName, 
+                   SocialSecurityNumber, 
+                   PhoneNumber,
+                   Email,
+                   Program   
+            FROM Student
+        ";
+
+        using var connection = new SqlConnection(connectionString);
+        using var commmand = new SqlCommand(sql, connection);
+
+        connection.Open();
+        var reader = commmand.ExecuteReader();
+
+        var students = new List<Student>();
+
+        // while (reader.Read())
+        // {
+        //     var student = new Student()
+        //     {
+        //         FirstName = reader["FirstName"].ToString(),
+        //         LastName = reader["LastName"].ToString(),
+        //         SocialSecurityNumber = reader["SocialSecurityNumber"].ToString(),
+        //         PhoneNumber = reader["PhoneNumber"].ToString(),
+        //         Email = reader["Email"].ToString(),
+        //         Program = reader["Program"].ToString(),
+        //     };
+        //     students.Add(student);
+        // }
+
+        while (reader.Read())
+        {
+            var student = new Student(
+                reader["FirstName"].ToString(),
+                reader["LastName"].ToString(),
+                reader["SocialSecurityNumber"].ToString(),
+                reader["PhoneNumber"].ToString(),
+                reader["Email"].ToString(),
+                reader["Program"].ToString()
+            );
+            students.Add(student);
+        }
+
+        connection.Close();
+
+        return students;
     }
 
 
