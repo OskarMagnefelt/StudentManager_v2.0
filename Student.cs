@@ -35,10 +35,6 @@ class Student
     public string Email { get; set; }
     public string Program { get; set; }
 
-
-
-
-
     public Student(string firstName, string lastName, string socialSecurityNumber, string phoneNumber, string email, string program)
     {
         FirstName = firstName;

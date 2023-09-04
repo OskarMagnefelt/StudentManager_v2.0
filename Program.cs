@@ -6,10 +6,7 @@ namespace StudentManager;
 
 class Program
 {
-    // static List<Student> students = new List<Student>();
-
     static string connectionString = "Server=.;Database=StudentManager_v2;Integrated Security=true;Encrypt=False";
-    // static string connectionString = "localhost";
     static void Main()
     {
         CursorVisible = false;
@@ -38,7 +35,7 @@ class Program
                 case ConsoleKey.D2:
                 case ConsoleKey.NumPad2:
 
-                    // SearchStudent();
+                    SearchStudent();
 
                     break;
 
@@ -87,12 +84,8 @@ class Program
 
         string program = ReadLine();
 
-        // YYYYMMDD-XXXX
-
-
         var student = new Student
         (
-
         firstName,
         lastName,
         socialSecurityNumber,
@@ -119,8 +112,10 @@ class Program
 
     private static void SaveStudent(Student student)
     {
-        // if (students.Exists(x => x.SocialSecurityNumber == student.SocialSecurityNumber))
-        //     throw new Exception("Student already registered");
+        var students = FetchStudents();
+
+        if (students.Exists(x => x.SocialSecurityNumber == student.SocialSecurityNumber))
+            throw new Exception("Student already registered");
 
 
         string sql = @"
@@ -152,54 +147,54 @@ class Program
         command.Parameters.AddWithValue("@Email", student.Email);
         command.Parameters.AddWithValue("@Program", student.Program);
 
-
         connection.Open();
 
-        // command.ExecuteNonQuery();
-        int rowsAffected = command.ExecuteNonQuery();
+        command.ExecuteNonQuery();
+
+        // int rowsAffected = command.ExecuteNonQuery();
 
         connection.Close();
 
-        if (rowsAffected == 1)
+        // if (rowsAffected == 1)
+        // {
+        //     Console.WriteLine("Student inserted successfully.");
+        // }
+        // else
+        // {
+        //     Console.WriteLine("Failed to insert student.");
+        // }
+    }
+
+    private static void SearchStudent()
+    {
+
+        Write("Personnummer: ");
+
+        string socialSecurityNumber = ReadLine();
+
+        Clear();
+
+        var students = FetchStudents();
+
+        var student = students.Find(student => student.SocialSecurityNumber == socialSecurityNumber);
+
+        if (student != null)
         {
-            Console.WriteLine("Student inserted successfully.");
+            WriteLine($"Förnamn: {student.FirstName}");
+            WriteLine($"Efternamn: {student.LastName}");
+            WriteLine($"Personnummer: {student.SocialSecurityNumber}");
+            WriteLine($"E-post: {student.Email}");
+            WriteLine($"Klass: {student.Program}");
+
+            while (ReadKey(true).Key != ConsoleKey.Escape) ;
         }
         else
         {
-            Console.WriteLine("Failed to insert student.");
+            WriteLine("Studerande saknas");
+
+            Thread.Sleep(2000);
         }
     }
-
-    // private static void SearchStudent()
-    // {
-
-    //     Write("Personnummer: ");
-
-    //     string socialSecurityNumber = ReadLine();
-
-    //     Clear();
-
-    //     var students = FetchStudents();
-
-    //     var student = students.Find(student => student.SocialSecurityNumber == socialSecurityNumber);
-
-    //     if (student != null)
-    //     {
-    //         WriteLine($"Förnamn: {student.FirstName}");
-    //         WriteLine($"Efternamn: {student.LastName}");
-    //         WriteLine($"Personnummer: {student.SocialSecurityNumber}");
-    //         WriteLine($"E-post: {student.Email}");
-    //         WriteLine($"Klass: {student.Program}");
-
-    //         while (ReadKey(true).Key != ConsoleKey.Escape) ;
-    //     }
-    //     else
-    //     {
-    //         WriteLine("Studerande saknas");
-
-    //         Thread.Sleep(2000);
-    //     }
-    // }
 
     private static void ListStudents()
     {
@@ -219,7 +214,7 @@ class Program
         while (ReadKey(true).Key != ConsoleKey.Escape) ;
     }
 
-    private static IEnumerable<Student> FetchStudents()
+    private static List<Student> FetchStudents()
     {
         var sql = @"
             SELECT FirstName, 
@@ -239,20 +234,6 @@ class Program
 
         var students = new List<Student>();
 
-        // while (reader.Read())
-        // {
-        //     var student = new Student()
-        //     {
-        //         FirstName = reader["FirstName"].ToString(),
-        //         LastName = reader["LastName"].ToString(),
-        //         SocialSecurityNumber = reader["SocialSecurityNumber"].ToString(),
-        //         PhoneNumber = reader["PhoneNumber"].ToString(),
-        //         Email = reader["Email"].ToString(),
-        //         Program = reader["Program"].ToString(),
-        //     };
-        //     students.Add(student);
-        // }
-
         while (reader.Read())
         {
             var student = new Student(
@@ -270,6 +251,4 @@ class Program
 
         return students;
     }
-
-
 }
