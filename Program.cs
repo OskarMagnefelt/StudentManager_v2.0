@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using Microsoft.Data.SqlClient;
+using StudentManager.Data;
 using static System.Console;
 
 namespace StudentManager;
@@ -7,6 +8,8 @@ namespace StudentManager;
 class Program
 {
     static string connectionString = "Server=.;Database=StudentManager_v2;Integrated Security=true;Encrypt=False";
+
+    static ApplicationContext context = new ApplicationContext(connectionString);
     static void Main()
     {
         CursorVisible = false;
@@ -112,71 +115,17 @@ class Program
 
     private static void SaveStudent(Student student)
     {
-        var students = FetchStudents();
+        context.Student.Add(student);
 
-        if (students.Exists(x => x.SocialSecurityNumber == student.SocialSecurityNumber))
-            throw new Exception("Student already registered");
-
-
-        string sql = @"
-        INSERT INTO Student (
-            FirstName,
-            LastName,
-            SocialSecurityNumber,
-            PhoneNumber,
-            Email,
-            Program
-            ) VALUES (
-                @FirstName,
-                @LastName,
-                @SocialSecurityNumber,
-                @PhoneNumber,
-                @Email,
-                @Program)
-        ";
-
-        // SqlConnectionn används för att upprätthålla kommmunikationen med databasen.
-        using var connection = new SqlConnection(connectionString);
-
-        using var command = new SqlCommand(sql, connection);
-
-        command.Parameters.AddWithValue("@FirstName", student.FirstName);
-        command.Parameters.AddWithValue("@LastName", student.LastName);
-        command.Parameters.AddWithValue("@SocialSecurityNumber", student.SocialSecurityNumber);
-        command.Parameters.AddWithValue("@PhoneNumber", student.PhoneNumber);
-        command.Parameters.AddWithValue("@Email", student.Email);
-        command.Parameters.AddWithValue("@Program", student.Program);
-
-        connection.Open();
-
-        command.ExecuteNonQuery();
-
-        // int rowsAffected = command.ExecuteNonQuery();
-
-        connection.Close();
-
-        // if (rowsAffected == 1)
-        // {
-        //     Console.WriteLine("Student inserted successfully.");
-        // }
-        // else
-        // {
-        //     Console.WriteLine("Failed to insert student.");
-        // }
+        context.SaveChanges();
     }
 
     private static void SearchStudent()
     {
-
         Write("Personnummer: ");
 
         string socialSecurityNumber = ReadLine();
-
-        Clear();
-
-        var students = FetchStudents();
-
-        var student = students.Find(student => student.SocialSecurityNumber == socialSecurityNumber);
+        var student = context.Student.FirstOrDefault(x => x.SocialSecurityNumber == socialSecurityNumber);
 
         if (student != null)
         {
@@ -214,41 +163,5 @@ class Program
         while (ReadKey(true).Key != ConsoleKey.Escape) ;
     }
 
-    private static List<Student> FetchStudents()
-    {
-        var sql = @"
-            SELECT FirstName, 
-                   LastName, 
-                   SocialSecurityNumber, 
-                   PhoneNumber,
-                   Email,
-                   Program   
-            FROM Student
-        ";
-
-        using var connection = new SqlConnection(connectionString);
-        using var commmand = new SqlCommand(sql, connection);
-
-        connection.Open();
-        var reader = commmand.ExecuteReader();
-
-        var students = new List<Student>();
-
-        while (reader.Read())
-        {
-            var student = new Student(
-                reader["FirstName"].ToString(),
-                reader["LastName"].ToString(),
-                reader["SocialSecurityNumber"].ToString(),
-                reader["PhoneNumber"].ToString(),
-                reader["Email"].ToString(),
-                reader["Program"].ToString()
-            );
-            students.Add(student);
-        }
-
-        connection.Close();
-
-        return students;
-    }
+    private static List<Student> FetchStudents() => context.Student.ToList();
 }
