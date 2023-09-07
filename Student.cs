@@ -48,7 +48,10 @@ public class Student
     [MaxLength(50)]
     public string Program { get; set; }
 
-    public Student(string firstName, string lastName, string socialSecurityNumber, string phoneNumber, string email, string program)
+    [MaxLength(50)]
+    public string Address { get; set; }
+
+    public Student(string firstName, string lastName, string socialSecurityNumber, string phoneNumber, string email, string program, string address)
     {
         FirstName = firstName;
         LastName = lastName;
@@ -56,6 +59,7 @@ public class Student
         PhoneNumber = phoneNumber;
         Email = email;
         Program = program;
+        Address = address;
     }
 
     private string socialSecurityNumber;
