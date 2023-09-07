@@ -61,3 +61,8 @@ C:\Users\magne\OneDrive\Skrivbord\Dokument\Skola\Backend1\StudentManager_v2.0\bi
 C:\Users\magne\OneDrive\Skrivbord\Dokument\Skola\Backend1\StudentManager_v2.0\bin\Debug\net7.0\Microsoft.Extensions.Logging.Abstractions.dll
 C:\Users\magne\OneDrive\Skrivbord\Dokument\Skola\Backend1\StudentManager_v2.0\bin\Debug\net7.0\Microsoft.Extensions.Options.dll
 C:\Users\magne\OneDrive\Skrivbord\Dokument\Skola\Backend1\StudentManager_v2.0\bin\Debug\net7.0\Microsoft.Extensions.Primitives.dll
+C:\Users\magne\OneDrive\Skrivbord\Dokument\Skola\Backend1\StudentManager_v2.0\bin\Debug\net7.0\Humanizer.dll
+C:\Users\magne\OneDrive\Skrivbord\Dokument\Skola\Backend1\StudentManager_v2.0\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\magne\OneDrive\Skrivbord\Dokument\Skola\Backend1\StudentManager_v2.0\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\magne\OneDrive\Skrivbord\Dokument\Skola\Backend1\StudentManager_v2.0\bin\Debug\net7.0\Mono.TextTemplating.dll
+C:\Users\magne\OneDrive\Skrivbord\Dokument\Skola\Backend1\StudentManager_v2.0\bin\Debug\net7.0\System.CodeDom.dll

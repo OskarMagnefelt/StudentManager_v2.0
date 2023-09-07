@@ -7,9 +7,12 @@ namespace StudentManager;
 
 class Program
 {
-    static string connectionString = "Server=.;Database=StudentManager_v2;Integrated Security=true;Encrypt=False";
+    // Undertill är det som var innan Migrations
+    // static string connectionString = "Server=.;Database=StudentManager_v2;Integrated Security=true;Encrypt=False";
+    // static ApplicationContext context = new ApplicationContext(connectionString);
 
-    static ApplicationContext context = new ApplicationContext(connectionString);
+    // Undertill är det som är nu med Migrations
+    static ApplicationContext context = new ApplicationContext();
     static void Main()
     {
         CursorVisible = false;

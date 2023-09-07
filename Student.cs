@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -6,8 +7,14 @@ namespace StudentManager;
 public class Student
 {
     public int Id { get; set; }
+
+    [MaxLength(50)]
     public string FirstName { get; set; }
+
+    [MaxLength(50)]
     public string LastName { get; set; }
+
+    [MaxLength(20)]
     public string SocialSecurityNumber
     {
         get => socialSecurityNumber;
@@ -32,8 +39,13 @@ public class Student
         }
     }
 
+    [MaxLength(50)]
     public string PhoneNumber { get; set; }
+
+    [MaxLength(50)]
     public string Email { get; set; }
+
+    [MaxLength(50)]
     public string Program { get; set; }
 
     public Student(string firstName, string lastName, string socialSecurityNumber, string phoneNumber, string email, string program)
